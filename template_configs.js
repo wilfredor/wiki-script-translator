@@ -1,10 +1,12 @@
-    // Configuração central de mapeamento por predefinição
-    // Adicione novas entradas aqui com: nomes alternativos, destino e mapa de parâmetros
+// Configuração central de mapeamento por predefinição
+// Adicione novas entradas aqui com: nomes alternativos, destino e mapa de parâmetros
+// Para campos enumerados, use valueMap: { to: 'destino', valueMap: { 'valor_en': 'valor_pt' } }
    const templateConfigs = [
         {
             names: ['cite web', 'cite_web'],
             target: 'citar web',
             dateFields: ['data', 'acessodata', 'arquivodata'],
+            singleLine: true,
             params: {
                 title: 'título',
                 work: 'obra',
@@ -14,7 +16,24 @@
                 accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' },
                 archiveurl: 'arquivourl',
                 archivedate: { to: 'arquivodata', mask: 'DD de MONTH de YYYY' },
-                urlstatus: 'urlmorta',
+                urlstatus: {
+                    to: 'urlmorta',
+                    valueMap: {
+                        dead: 'sim',
+                        live: 'não',
+                        usurped: 'sim',
+                        unfit: 'sim',
+                        deviated: 'sim'
+                    }
+                },
+                urlaccess: {
+                    to: 'acessourl',
+                    valueMap: {
+                        registration: 'registo',
+                        subscription: 'subscrição',
+                        limited: 'limitada'
+                    }
+                },
                 language: 'língua',
                 author: 'autor',
                 last: 'último',
@@ -25,6 +44,7 @@
             names: ['cite news', 'cite newspaper'],
             target: 'citar jornal',
             dateFields: ['data', 'acessodata', 'arquivodata'],
+            singleLine: true,
             params: {
                 title: 'título',
                 newspaper: 'jornal',
@@ -34,7 +54,24 @@
                 accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' },
                 archiveurl: 'arquivourl',
                 archivedate: { to: 'arquivodata', mask: 'DD de MONTH de YYYY' },
-                urlstatus: 'urlmorta',
+                urlstatus: {
+                    to: 'urlmorta',
+                    valueMap: {
+                        dead: 'sim',
+                        live: 'não',
+                        usurped: 'sim',
+                        unfit: 'sim',
+                        deviated: 'sim'
+                    }
+                },
+                urlaccess: {
+                    to: 'acessourl',
+                    valueMap: {
+                        registration: 'registo',
+                        subscription: 'subscrição',
+                        limited: 'limitada'
+                    }
+                },
                 language: 'língua',
                 author: 'autor',
                 last: 'último',
@@ -45,6 +82,7 @@
             names: ['cite book'],
             target: 'citar livro',
             dateFields: ['data'],
+            singleLine: true,
             params: {
                 title: 'título',
                 publisher: 'editora',
@@ -63,6 +101,7 @@
             names: ['cite journal'],
             target: 'citar periódico',
             dateFields: ['data'],
+            singleLine: true,
             params: {
                 title: 'título',
                 journal: 'publicação',
@@ -82,6 +121,7 @@
             names: ['cite conference', 'cite_conference'], 
             target: 'citar congresso', 
             dateFields: ['data', 'acessodata'], 
+            singleLine: true,
             params: { 
                 title: 'título', 
                 booktitle: 'título-livro', 
@@ -101,6 +141,7 @@
             names: ['cite interview', 'cite_interview'], 
             target: 'citar entrevista', 
             dateFields: ['data'], 
+            singleLine: true,
             params: { 
                 subject: 'entrevistado', 
                 title: 'título', 
@@ -116,6 +157,7 @@
             names: ['cite thesis', 'cite_thesis'], 
             target: 'citar tese', 
             dateFields: ['data', 'acessodata'], 
+            singleLine: true,
             params: { 
                 title: 'título', 
                 date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
@@ -133,6 +175,7 @@
             names: ['cite document', 'cite_document'], 
             target: 'citar documento', 
             dateFields: ['data', 'acessodata'], 
+            singleLine: true,
             params: { 
                 title: 'título', 
                 date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
@@ -150,6 +193,7 @@
             names: ['cite encyclopedia', 'cite_encyclopedia'], 
             target: 'citar enciclopédia', 
             dateFields: ['data', 'acessodata'], 
+            singleLine: true,
             params: { 
                 title: 'título', 
                 encyclopedia: 'enciclopédia', 

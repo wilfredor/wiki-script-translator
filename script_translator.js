@@ -79,6 +79,20 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         return mask.replace(/YYYY|MM|DD|MONTH/g, (t) => tokens[t] || '');
     }
 
+    function mapEnumValue(valueMap, rawValue) {
+        if (!valueMap) return null;
+        const trimmed = (rawValue || '').trim();
+        if (!trimmed) return null;
+        const lowered = trimmed.toLowerCase();
+        if (Object.prototype.hasOwnProperty.call(valueMap, trimmed)) {
+            return valueMap[trimmed];
+        }
+        if (Object.prototype.hasOwnProperty.call(valueMap, lowered)) {
+            return valueMap[lowered];
+        }
+        return null;
+    }
+
     const dateParamsPt = new Set([
         'data',
         'acessodata',
@@ -116,9 +130,10 @@ importScript('Usuário(a):Wilfredor/template configs.js');
                     const value = m[2];
                     const cleanValue = value.trim();
                     const paramCfg = cfg.params[origName];
-                    const mappedName = typeof paramCfg === 'object' ? (paramCfg.to || paramCfg) : (paramCfg || origName);
+                    const isObjectCfg = paramCfg && typeof paramCfg === 'object';
+                    const mappedName = isObjectCfg ? (paramCfg.to || origName) : (paramCfg || origName);
                     let mappedValue = value;
-                    if (paramCfg && typeof paramCfg === 'object' && paramCfg.mask) {
+                    if (isObjectCfg && paramCfg.mask) {
                         const parts = parseDateParts(cleanValue);
                         const hasDayYear = parts && parts.dd && parts.yyyy;
                         const masked = hasDayYear ? applyDateMask(parts, paramCfg.mask) : null;
@@ -126,6 +141,12 @@ importScript('Usuário(a):Wilfredor/template configs.js');
                     } else if (dateSet.has(mappedName)) {
                         const normalized = normalizeDate(cleanValue);
                         mappedValue = normalized || value;
+                    }
+                    if (isObjectCfg && paramCfg.valueMap) {
+                        const mappedEnum = mapEnumValue(paramCfg.valueMap, cleanValue);
+                        if (mappedEnum !== null && mappedEnum !== undefined) {
+                            mappedValue = mappedEnum;
+                        }
                     }
                     mapped.push({ name: mappedName, value: mappedValue });
                 });
@@ -140,6 +161,9 @@ importScript('Usuário(a):Wilfredor/template configs.js');
                     rebuilt += p;
                 });
                 rebuilt += '}}';
+                if (cfg.singleLine) {
+                    rebuilt = rebuilt.replace(/\r?\n\s*/g, ' ');
+                }
                 return rebuilt;
             });
         });
