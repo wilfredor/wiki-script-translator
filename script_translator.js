@@ -442,6 +442,36 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         return text;
     }
 
+    function translateCategoriesAndFiles(text) {
+        // Categorias
+        text = text.replace(/\[\[\s*Category\s*:/gi, '[[Categoria:');
+        // DEFAULTSORT → ORDENAR
+        text = text.replace(/\{\{\s*DEFAULTSORT\s*:/gi, '{{ORDENAR:');
+        // Dead link
+        text = text.replace(/\{\{\s*Dead link\s*\}\}/gi, '{{Ligação inativa}}');
+        // Arquivos
+        text = text.replace(/\[\[\s*File\s*:/gi, '[[Ficheiro:');
+        // Ajusta atributos de imagem
+        text = text.replace(/\|right\b/gi, '|direita');
+        text = text.replace(/\|left\b/gi, '|esquerda');
+        text = text.replace(/\|upright\b/gi, '|vertical');
+        return text;
+    }
+
+    function convertNumberEnToPt(numStr) {
+        // remove separadores de milhar com vírgula e troca o ponto decimal por vírgula
+        const cleaned = numStr.replace(/,/g, '');
+        const parts = cleaned.split('.');
+        if (parts.length === 1) return cleaned;
+        const decimal = parts.pop();
+        const integer = parts.join('');
+        return integer + ',' + decimal;
+    }
+
+    function translateNumbers(text) {
+        return text.replace(/\b\d{1,3}(?:,\d{3})+(?:\.\d+)?\b/g, (m) => convertNumberEnToPt(m));
+    }
+
     function translateTemplates(text) {
         // Aplica mapeamentos específicos por predefinição (inclui aninhadas)
         let changed = true;
@@ -453,6 +483,8 @@ importScript('Usuário(a):Wilfredor/template configs.js');
             safeGuard += 1;
         }
         text = translateDates(text);
+        text = translateCategoriesAndFiles(text);
+        text = translateNumbers(text);
         // Normaliza bloco de referências simples para a predefinição padrão
         text = text.replace(/\n==\s*Refer[eê]ncias\s*==\s*\n\s*\{\{\s*reflist\s*\}\}\s*/i, '\n{{Referências}}\n');
         return text;
