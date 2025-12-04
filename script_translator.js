@@ -93,6 +93,121 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         return null;
     }
 
+    function sortMappedParams(mapped, cfg) {
+        if (cfg && cfg.preserveOrder) {
+            return mapped;
+        }
+        if (cfg && Array.isArray(cfg.paramOrder)) {
+            const order = new Map();
+            cfg.paramOrder.forEach((name, idx) => order.set(name, idx));
+            return mapped.sort((a, b) => {
+                const ai = order.has(a.name) ? order.get(a.name) : Number.MAX_SAFE_INTEGER;
+                const bi = order.has(b.name) ? order.get(b.name) : Number.MAX_SAFE_INTEGER;
+                if (ai !== bi) return ai - bi;
+                return a.name.localeCompare(b.name, 'pt');
+            });
+        }
+        return mapped.sort((a, b) => a.name.localeCompare(b.name, 'pt'));
+    }
+
+    function normalizeTplName(name) {
+        return (name || '')
+            .replace(/_/g, ' ')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+    }
+
+    function resolveParamCfg(cfgParams, origName) {
+        if (!cfgParams) return null;
+        const variants = [
+            origName,
+            origName.toLowerCase(),
+            origName.replace(/_/g, '-'),
+            origName.replace(/_/g, '-').toLowerCase()
+        ];
+        for (const v of variants) {
+            if (Object.prototype.hasOwnProperty.call(cfgParams, v)) {
+                return { paramCfg: cfgParams[v], mappedKey: v };
+            }
+        }
+        return null;
+    }
+
+    function splitParamsSafe(content) {
+        const parts = [];
+        let buf = '';
+        let tplDepth = 0;
+        let linkDepth = 0;
+        const len = content.length;
+        for (let i = 0; i < len; i++) {
+            const ch = content[i];
+            const next = i + 1 < len ? content[i + 1] : '';
+            if (ch === '{' && next === '{') {
+                tplDepth += 1;
+                buf += '{{';
+                i += 1;
+                continue;
+            }
+            if (ch === '}' && next === '}' && tplDepth > 0) {
+                tplDepth -= 1;
+                buf += '}}';
+                i += 1;
+                continue;
+            }
+            if (ch === '[' && next === '[') {
+                linkDepth += 1;
+                buf += '[[';
+                i += 1;
+                continue;
+            }
+            if (ch === ']' && next === ']' && linkDepth > 0) {
+                linkDepth -= 1;
+                buf += ']]';
+                i += 1;
+                continue;
+            }
+            if (ch === '|' && tplDepth === 0 && linkDepth === 0) {
+                parts.push(buf);
+                buf = '';
+                continue;
+            }
+            buf += ch;
+        }
+        parts.push(buf);
+        return parts;
+    }
+
+    function buildNameLookup() {
+        const map = new Map();
+        templateConfigs.forEach((cfg) => {
+            (cfg.names || []).forEach((n) => {
+                map.set(normalizeTplName(n), cfg);
+            });
+        });
+        return map;
+    }
+
+    function findTemplates(text) {
+        const matches = [];
+        const len = text.length;
+        const stack = [];
+        for (let i = 0; i < len - 1; i++) {
+            if (text[i] === '{' && text[i + 1] === '{') {
+                stack.push(i);
+                i += 1;
+                continue;
+            }
+            if (text[i] === '}' && text[i + 1] === '}' && stack.length) {
+                const start = stack.pop();
+                const end = i + 2;
+                matches.push({ start, end });
+                i += 1;
+            }
+        }
+        return matches;
+    }
+
     const dateParamsPt = new Set([
         'data',
         'acessodata',
@@ -106,68 +221,135 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         'death_date'
     ]);
 
-    function applyTemplateConfigs(text) {
-        templateConfigs.forEach((cfg) => {
-            const namesPattern = cfg.names.map(escapeRegExp).join('|');
-            const tplRe = new RegExp(`\\{\\{\\s*(?:${namesPattern})([\\s\\S]*?)\\}\\}`, 'ig');
-            text = text.replace(tplRe, function (match, content) {
-                // divide por parâmetros
-                const parts = content.split('|');
-                const head = parts.shift() || '';
-                const mapped = [];
-                const others = [];
-                const dateSet = new Set([...(cfg.dateFields || []), ...dateParamsPt]);
+    function translateTemplateContent(cfg, content) {
+        if (cfg && cfg.passthrough) {
+            const trimmedContent = content || '';
+            const sep = trimmedContent ? '|' : '';
+            return `{{${cfg.target}${sep}${trimmedContent}}}`;
+        }
+        // divide por parâmetros
+        const parts = splitParamsSafe(content);
+        const mapped = [];
+        const others = [];
+        const orderedParts = [];
+        const dateSet = new Set([...(cfg.dateFields || []), ...dateParamsPt]);
+        const positionalCfg = Array.isArray(cfg.positional) ? cfg.positional : [];
+        let positionalIndex = 0;
 
-                parts.forEach((part) => {
-                    // preserva o separador inicial
-                    const fullPart = '|' + part;
-                    const m = part.match(/^\s*([^\s=]+)\s*=\s*([\s\S]*)$/);
-                    if (!m) {
-                        others.push(fullPart);
-                        return;
-                    }
-                    const origName = m[1];
-                    const value = m[2];
-                    const cleanValue = value.trim();
-                    const paramCfg = cfg.params[origName];
-                    const isObjectCfg = paramCfg && typeof paramCfg === 'object';
-                    const mappedName = isObjectCfg ? (paramCfg.to || origName) : (paramCfg || origName);
-                    let mappedValue = value;
-                    if (isObjectCfg && paramCfg.mask) {
-                        const parts = parseDateParts(cleanValue);
-                        const hasDayYear = parts && parts.dd && parts.yyyy;
-                        const masked = hasDayYear ? applyDateMask(parts, paramCfg.mask) : null;
-                        mappedValue = masked || normalizeDate(cleanValue) || value;
-                    } else if (dateSet.has(mappedName)) {
-                        const normalized = normalizeDate(cleanValue);
-                        mappedValue = normalized || value;
-                    }
-                    if (isObjectCfg && paramCfg.valueMap) {
-                        const mappedEnum = mapEnumValue(paramCfg.valueMap, cleanValue);
-                        if (mappedEnum !== null && mappedEnum !== undefined) {
-                            mappedValue = mappedEnum;
-                        }
-                    }
-                    mapped.push({ name: mappedName, value: mappedValue });
-                });
-
-                mapped.sort((a, b) => a.name.localeCompare(b.name, 'pt'));
-
-                let rebuilt = `{{${cfg.target}${head}`;
-                mapped.forEach(({ name, value }) => {
-                    rebuilt += '|' + name + '=' + value;
-                });
-                others.forEach((p) => {
-                    rebuilt += p;
-                });
-                rebuilt += '}}';
-                if (cfg.singleLine) {
-                    rebuilt = rebuilt.replace(/\r?\n\s*/g, ' ');
+        parts.forEach((part) => {
+            // preserva o separador inicial
+            const fullPart = '|' + part;
+            const m = part.match(/^\s*([^\s=]+)\s*=\s*([\s\S]*)$/);
+            if (!m) {
+                const posCfg = positionalCfg[positionalIndex] || null;
+                const value = part;
+                const cleanValue = value.trim();
+                if (!posCfg) {
+                    others.push(fullPart);
+                    orderedParts.push(fullPart);
+                    positionalIndex += 1;
+                    return;
                 }
-                return rebuilt;
-            });
+                const posName = posCfg.to || String(positionalIndex + 1);
+                let mappedValue = value;
+                if (posCfg.valueMap) {
+                    const mappedEnum = mapEnumValue(posCfg.valueMap, cleanValue);
+                    if (mappedEnum !== null && mappedEnum !== undefined) {
+                        mappedValue = mappedEnum;
+                    }
+                }
+                mapped.push({ name: posName, value: mappedValue });
+                orderedParts.push('|' + posName + '=' + mappedValue);
+                positionalIndex += 1;
+                return;
+            }
+            const origName = m[1];
+            const value = m[2];
+            const cleanValue = value.trim();
+            const resolved = resolveParamCfg(cfg.params, origName);
+            const paramCfg = resolved ? resolved.paramCfg : undefined;
+            const mappedKey = resolved ? resolved.mappedKey : origName;
+            const isObjectCfg = paramCfg && typeof paramCfg === 'object';
+            const mappedName = isObjectCfg ? (paramCfg.to || mappedKey) : (paramCfg || mappedKey);
+            let mappedValue = value;
+            if (isObjectCfg && paramCfg.mask) {
+                const dateParts = parseDateParts(cleanValue);
+                const hasDayYear = dateParts && dateParts.dd && dateParts.yyyy;
+                const masked = hasDayYear ? applyDateMask(dateParts, paramCfg.mask) : null;
+                mappedValue = masked || normalizeDate(cleanValue) || value;
+            } else if (dateSet.has(mappedName)) {
+                const normalized = normalizeDate(cleanValue);
+                mappedValue = normalized || value;
+            }
+            if (isObjectCfg && paramCfg.valueMap) {
+                const mappedEnum = mapEnumValue(paramCfg.valueMap, cleanValue);
+                if (mappedEnum !== null && mappedEnum !== undefined) {
+                    mappedValue = mappedEnum;
+                }
+            }
+            mapped.push({ name: mappedName, value: mappedValue });
+            orderedParts.push('|' + mappedName + '=' + mappedValue);
         });
-        return text;
+
+        let rebuilt;
+        if (cfg && cfg.preserveOrder) {
+            // mantém a ordem original (mapped/posicionais/outros na sequência lida)
+            rebuilt = `{{${cfg.target}` + orderedParts.join('') + '}}';
+        } else {
+            const sorted = sortMappedParams(mapped, cfg);
+            rebuilt = `{{${cfg.target}`;
+            sorted.forEach(({ name, value }) => {
+                rebuilt += '|' + name + '=' + value;
+            });
+            others.forEach((p) => {
+                rebuilt += p;
+            });
+            rebuilt += '}}';
+        }
+        if (cfg.singleLine) {
+            rebuilt = rebuilt.replace(/\r?\n\s*/g, ' ');
+        }
+        return rebuilt;
+    }
+
+    function applyTemplateConfigs(text) {
+        const nameLookup = buildNameLookup();
+        let output = text;
+        let changed = false;
+        let guard = 0;
+
+        while (guard < 200) {
+            const matches = findTemplates(output);
+            if (!matches.length) break;
+
+            let replaced = false;
+            for (let i = matches.length - 1; i >= 0; i--) {
+                const { start, end } = matches[i];
+                const raw = output.slice(start, end);
+                const inner = raw.slice(2, -2);
+                const nameMatch = inner.match(/^\s*([^|]+?)(\|[\s\S]*)?$/);
+                if (!nameMatch) continue;
+                const rawName = (nameMatch[1] || '').trim();
+                const tplName = normalizeTplName(rawName);
+                const cfg = nameLookup.get(tplName);
+                if (!cfg) continue;
+                const content = nameMatch[2] ? nameMatch[2].slice(1) : '';
+                const translated = translateTemplateContent(cfg, content);
+                if (translated === raw) {
+                    // já traduzido ou sem mudanças; continue buscando outro
+                    continue;
+                }
+                output = output.slice(0, start) + translated + output.slice(end);
+                changed = true;
+                replaced = true;
+                break; // refaça o scan após cada substituição
+            }
+
+            if (!replaced) break;
+            guard += 1;
+        }
+
+        return { text: output, changed };
     }
 
     const monthsPt = [
@@ -261,8 +443,15 @@ importScript('Usuário(a):Wilfredor/template configs.js');
     }
 
     function translateTemplates(text) {
-        // Aplica mapeamentos específicos por predefinição
-        text = applyTemplateConfigs(text);
+        // Aplica mapeamentos específicos por predefinição (inclui aninhadas)
+        let changed = true;
+        let safeGuard = 0;
+        while (changed && safeGuard < 8) {
+            const result = applyTemplateConfigs(text);
+            text = result.text;
+            changed = result.changed;
+            safeGuard += 1;
+        }
         text = translateDates(text);
         // Normaliza bloco de referências simples para a predefinição padrão
         text = text.replace(/\n==\s*Refer[eê]ncias\s*==\s*\n\s*\{\{\s*reflist\s*\}\}\s*/i, '\n{{Referências}}\n');

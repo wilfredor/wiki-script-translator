@@ -8,6 +8,8 @@ User script que traduz predefinições (referências e infoboxes) do inglês par
 - Normaliza datas comuns para o formato português.
 - Mantém referências em uma única linha quando `singleLine` está marcado para aquela predefinição.
 - Permite mapear valores enumerados (por exemplo, campos que aceitam apenas valores de lista) via `valueMap`.
+- Permite preservar ou definir ordem customizada de parâmetros (`preserveOrder` ou `paramOrder`).
+- Permite mapear parâmetros posicionais (sem nome) via `positional`.
 
 ## Instalação
 1) Copie `template_configs.js` para sua página de scripts na wiki (ex.: `Usuário(a):Você/template configs.js`).  
@@ -24,6 +26,11 @@ Cada entrada em `template_configs.js` segue esta estrutura:
   target: 'citar web',             // nome da predefinição destino
   dateFields: ['data', 'acessodata'],
   singleLine: true,                // força a referência a ficar em uma linha
+  preserveOrder: true,             // (opcional) mantém a ordem original dos parâmetros
+  // ou defina uma ordem explícita:
+  // paramOrder: ['título', 'autor', 'data'],
+  // para parâmetros sem nome (posicionais), siga a ordem recebida
+  // positional: [{ to: '1' }, { to: '2', valueMap: { 'old': 'novo' } }],
   params: {
     title: 'título',               // mapeia nome do parâmetro
     date: { to: 'data', mask: 'DD de MONTH de YYYY' }, // aplica máscara de data
