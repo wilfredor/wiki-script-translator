@@ -935,135 +935,221 @@
 		        /* Via / provedor */
 		        via: 'via'
 		    }
-		},
+        },
         {
-			  names: ['cite book', 'cite_book'],
-			  target: 'citar livro',
-			  dateFields: ['data', 'acessodata', 'data-publicacao', 'arquivodata', 'resumo-data'],
-			  singleLine: true,
-			  params: {
-			    /* título / obra / editora */
-			    title: 'título',
-			    subtitle: 'subtítulo',
-			    work: 'obra',
-			    publisher: 'editora',
-			    others: 'outros',
-			
-			    /* datas principais */
-			    date: { to: 'data', mask: 'DD de MONTH de YYYY' },
-			    year: 'ano',
-			    'publication-date': { to: 'data-publicacao', mask: 'DD de MONTH de YYYY' },
-			
-			    /* localização, edição, série, volume */
-			    location: 'local',
-			    'publication-place': 'local-publicacao',
-			    edition: 'edicao',
-			    series: 'series',
-			    volume: 'volume',
-			
-			    /* paginação */
+              names: ['cite book', 'cite_book'],
+              target: 'citar livro',
+              dateFields: ['data', 'acessodata', 'data-publicacao', 'arquivodata', 'resumo-data'],
+              singleLine: true,
+              params: {
+                /* título / obra / editora */
+                title: 'título',
+                titulo: 'título',
+                subtitle: 'subtítulo',
+                subtitulo: 'subtítulo',
+                work: 'obra',
+                publisher: 'editora',
+                published: 'editora',
+                publishedby: 'editora',
+                published_by: 'editora',
+                others: 'outros',
+
+                /* datas principais */
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' },
+                year: 'ano',
+                'publication-date': { to: 'data-publicacao', mask: 'DD de MONTH de YYYY' },
+                'publication year': 'ano',
+                'publication-year': 'ano',
+                'orig-year': 'anooriginal',
+                'origyear': 'anooriginal',
+
+                /* localização, edição, série, volume */
+                location: 'local',
+                place: 'local',
+                'publication-place': 'local-publicacao',
+                'publicationplace': 'local-publicacao',
+                edition: 'edicao',
+                series: 'series',
+                volume: 'volume',
+
+                /* paginação */
 			    page: 'página',
 			    pages: 'páginas',
 			    'total-pages': 'total-páginas',
-			    nopp: 'nopp',
-			    at: 'em',
-			
-			    /* idioma / título traduzido / transliterado */
-			    language: 'lingua',
-			    'script-title': 'titulo-translit',
-			    'trans-title': 'titulotrad',
-			
-			    /* capítulo */
-			    chapter: 'capitulo',
-			    'trans-chapter': 'trad-capitulo',
-			    'chapter-url': 'capitulourl',
+                nopp: 'nopp',
+                at: 'em',
+
+                /* idioma / título traduzido / transliterado */
+                language: 'lingua',
+                idioma: 'lingua',
+                'script-title': 'titulo-translit',
+                'trans-title': 'titulotrad',
+                'translated-title': 'titulotrad',
+
+                /* capítulo */
+                chapter: 'capitulo',
+                'trans-chapter': 'trad-capitulo',
+                'chapter-url': 'capitulourl',
 			
 			    /* tipo / formato */
 			    type: 'tipo',
-			    format: 'formato',
-			
-			    /* identificadores */
-			    arxiv: 'arxiv',
-			    asin: 'asin',
-			    'asin-tld': 'asin-tld',
-			    bibcode: 'bibcode',
-			    doi: 'doi',
-			    'doi-broken-date': { to: 'doi-broken-date', mask: 'DD-MM-YYYY' },
-			    isbn: 'isbn',
-			    issn: 'issn',
-			    jfm: 'jfm',
-			    jstor: 'jstor',
-			    lccn: 'lccn',
-			    mr: 'mr',
-			    oclc: 'oclc',
-			    ol: 'ol',
-			    osti: 'osti',
-			    pmc: 'pmc',
-			    pmid: 'pmid',
-			    rfc: 'rfc',
-			    ssrn: 'ssrn',
-			    zbl: 'zbl',
-			    id: 'id',
-			
-			    /* URL / arquivo / acesso */
-			    url: 'url',
-			    'access-date': { to: 'acessodata', mask: 'DD-MM-YYYY' },
-			    'orig-date': { to: 'anooriginal', mask: 'YYYY' },
-			    'archive-url': 'arquivourl',
-			    'archive-date': { to: 'arquivodata', mask: 'DD-MM-YYYY' },
-			    'url-status': {
-			      to: 'urlmorta',
-			      valueMap: {
-			        dead: 'sim',
-			        live: 'não'
-			      }
-			    },
-			    'url-access': {
-			      to: 'subscricao',
-			      valueMap: {
-			        subscription: 's',
-			        registration: 's',
-			        limited: 's'
-			      }
-			    },
+                format: 'formato',
+
+                /* identificadores */
+                arxiv: 'arxiv',
+                asin: 'asin',
+                'asin-tld': 'asin-tld',
+                bibcode: 'bibcode',
+                doi: 'doi',
+                'doi-broken-date': { to: 'doi-broken-date', mask: 'DD-MM-YYYY' },
+                isbn: 'isbn',
+                issn: 'issn',
+                eissn: 'eissn',
+                jfm: 'jfm',
+                jstor: 'jstor',
+                lccn: 'lccn',
+                mr: 'mr',
+                oclc: 'oclc',
+                ol: 'ol',
+                osti: 'osti',
+                pmc: 'pmc',
+                pmid: 'pmid',
+                rfc: 'rfc',
+                ssrn: 'ssrn',
+                zbl: 'zbl',
+                id: 'id',
+
+                /* URL / arquivo / acesso */
+                url: 'url',
+                'access-date': { to: 'acessodata', mask: 'DD-MM-YYYY' },
+                accessdate: { to: 'acessodata', mask: 'DD-MM-YYYY' },
+                'orig-date': { to: 'anooriginal', mask: 'YYYY' },
+                'archive-url': 'arquivourl',
+                'archive-date': { to: 'arquivodata', mask: 'DD-MM-YYYY' },
+                'archiveurl': 'arquivourl',
+                'archivedate': { to: 'arquivodata', mask: 'DD-MM-YYYY' },
+                'url-status': {
+                  to: 'urlmorta',
+                  valueMap: {
+                    dead: 'sim',
+                    live: 'não',
+                    usurped: 'sim',
+                    unfit: 'sim',
+                    deviated: 'sim'
+                  }
+                },
+                'url-access': {
+                  to: 'subscricao',
+                  valueMap: {
+                    subscription: 's',
+                    registration: 's',
+                    limited: 's'
+                  }
+                },
+                subscription: {
+                  to: 'subscricao',
+                  valueMap: {
+                    yes: 's',
+                    sim: 's',
+                    s: 's',
+                    true: 's'
+                  }
+                },
 			
 			    /* resumo leigo (lay summary) */
-			    'lay-url': 'url-resumo',
-			    'lay-source': 'resumo-fonte',
-			    'lay-date': { to: 'resumo-data', mask: 'DD-MM-YYYY' },
-			
-			    /* citação, ref, estilo */
-			    quote: 'citacao',
-			    ref: 'ref',
-			    'name-list-style': 'formato-lista-nomes',
-			    mode: 'modo',
-			    postscript: 'pontofinal',
-			    'last-author-amp': 'ultimoamp',
-			
-			    /* autores */
-			    last: 'ultimo',
-			    first: 'primeiro',
-			    last2: 'ultimo2',
-			    first2: 'primeiro2',
-			    last3: 'ultimo3',
-			    first3: 'primeiro3',
-			    last4: 'ultimo4',
-			    first4: 'primeiro4',
-			    last5: 'ultimo5',
-			    first5: 'primeiro5',
-			    last6: 'ultimo6',
-			    first6: 'primeiro6',
-			    last7: 'ultimo7',
-			    first7: 'primeiro7',
-			    last8: 'ultimo8',
-			    first8: 'primeiro8',
-			    last9: 'ultimo9',
-			    first9: 'primeiro9',
-			
-			    'author-mask2': 'autor-mascara2',
-			    'author-mask3': 'autor-mascara3',
-			    'author-mask4': 'autor-mascara4',
-			    'author-mask5': 'autor-mascara5',
+                'lay-url': 'url-resumo',
+                'lay-source': 'resumo-fonte',
+                'lay-date': { to: 'resumo-data', mask: 'DD-MM-YYYY' },
+
+                /* citação, ref, estilo */
+                quote: 'citacao',
+                ref: 'ref',
+                'name-list-style': 'formato-lista-nomes',
+                mode: 'modo',
+                postscript: 'pontofinal',
+                'last-author-amp': 'ultimoamp',
+
+                /* autores */
+                last: 'ultimo',
+                last1: 'ultimo',
+                author: 'ultimo',
+                author1: 'ultimo',
+                'author-last': 'ultimo',
+                'author-last1': 'ultimo',
+                surname: 'ultimo',
+                surname1: 'ultimo',
+                apelido: 'ultimo',
+                apelido1: 'ultimo',
+                apellidos: 'ultimo',
+                last2: 'ultimo2',
+                author2: 'ultimo2',
+                'author-last2': 'ultimo2',
+                surname2: 'ultimo2',
+                last3: 'ultimo3',
+                author3: 'ultimo3',
+                'author-last3': 'ultimo3',
+                surname3: 'ultimo3',
+                last4: 'ultimo4',
+                author4: 'ultimo4',
+                'author-last4': 'ultimo4',
+                surname4: 'ultimo4',
+                last5: 'ultimo5',
+                author5: 'ultimo5',
+                'author-last5': 'ultimo5',
+                surname5: 'ultimo5',
+                last6: 'ultimo6',
+                author6: 'ultimo6',
+                'author-last6': 'ultimo6',
+                surname6: 'ultimo6',
+                last7: 'ultimo7',
+                author7: 'ultimo7',
+                'author-last7': 'ultimo7',
+                surname7: 'ultimo7',
+                last8: 'ultimo8',
+                author8: 'ultimo8',
+                'author-last8': 'ultimo8',
+                surname8: 'ultimo8',
+                last9: 'ultimo9',
+                author9: 'ultimo9',
+                'author-last9': 'ultimo9',
+                surname9: 'ultimo9',
+
+                first: 'primeiro',
+                first1: 'primeiro',
+                nome: 'primeiro',
+                nome1: 'primeiro',
+                'author-first': 'primeiro',
+                'author-first1': 'primeiro',
+                given: 'primeiro',
+                first2: 'primeiro2',
+                nome2: 'primeiro2',
+                'author-first2': 'primeiro2',
+                first3: 'primeiro3',
+                nome3: 'primeiro3',
+                'author-first3': 'primeiro3',
+                first4: 'primeiro4',
+                nome4: 'primeiro4',
+                'author-first4': 'primeiro4',
+                first5: 'primeiro5',
+                nome5: 'primeiro5',
+                'author-first5': 'primeiro5',
+                first6: 'primeiro6',
+                nome6: 'primeiro6',
+                'author-first6': 'primeiro6',
+                first7: 'primeiro7',
+                nome7: 'primeiro7',
+                'author-first7': 'primeiro7',
+                first8: 'primeiro8',
+                nome8: 'primeiro8',
+                'author-first8': 'primeiro8',
+                first9: 'primeiro9',
+                nome9: 'primeiro9',
+                'author-first9': 'primeiro9',
+
+                'author-mask2': 'autor-mascara2',
+                'author-mask3': 'autor-mascara3',
+                'author-mask4': 'autor-mascara4',
+                'author-mask5': 'autor-mascara5',
 			    'author-mask6': 'autor-mascara6',
 			    'author-mask7': 'autor-mascara7',
 			    'author-mask8': 'autor-mascara8',
@@ -1076,48 +1162,48 @@
 			    'author-link4': 'autorlink4',
 			    'author-link5': 'autorlink5',
 			    'author-link6': 'autorlink6',
-			    'author-link7': 'autorlink7',
-			    'author-link8': 'autorlink8',
-			    'author-link9': 'autorlink9',
-			
-			    /* editores */
-			    'editor-last': 'editor-sobrenome',
-			    'editor-first': 'editor-nome',
-			    'editor-link': 'editor-link',
-			
-			    'editor-last2': 'editor-sobrenome2',
-			    'editor-first2': 'editor-nome2',
-			    'editor-link2': 'editor-link2',
-			
-			    'editor-last3': 'editor-sobrenome3',
-			    'editor-first3': 'editor-nome3',
-			    'editor-link3': 'editor-link3',
-			
-			    'editor-last4': 'editor-sobrenome4',
-			    'editor-first4': 'editor-nome4',
-			    'editor-link4': 'editor-link4',
-			
-			    'editor-last5': 'editor-sobrenome5',
-			    'editor-first5': 'editor-nome5',
-			    'editor-link5': 'editor-link5',
-			
-			    'editor-last6': 'editor-sobrenome6',
-			    'editor-first6': 'editor-nome6',
-			    'editor-link6': 'editor-link6',
-			
-			    'editor-last7': 'editor-sobrenome7',
-			    'editor-first7': 'editor-nome7',
-			    'editor-link7': 'editor-link7',
-			
-			    'editor-last8': 'editor-sobrenome8',
-			    'editor-first8': 'editor-nome8',
-			    'editor-link8': 'editor-link8',
-			
-			    'editor-last9': 'editor-sobrenome9',
-			    'editor-first9': 'editor-nome9',
-			    'editor-link9': 'editor-link9'
-			  }
-			},
+                'author-link7': 'autorlink7',
+                'author-link8': 'autorlink8',
+                'author-link9': 'autorlink9',
+
+                /* editores */
+                'editor-last': 'editor-sobrenome',
+                'editor-first': 'editor-nome',
+                'editor-link': 'editor-link',
+
+                'editor-last2': 'editor-sobrenome2',
+                'editor-first2': 'editor-nome2',
+                'editor-link2': 'editor-link2',
+
+                'editor-last3': 'editor-sobrenome3',
+                'editor-first3': 'editor-nome3',
+                'editor-link3': 'editor-link3',
+
+                'editor-last4': 'editor-sobrenome4',
+                'editor-first4': 'editor-nome4',
+                'editor-link4': 'editor-link4',
+
+                'editor-last5': 'editor-sobrenome5',
+                'editor-first5': 'editor-nome5',
+                'editor-link5': 'editor-link5',
+
+                'editor-last6': 'editor-sobrenome6',
+                'editor-first6': 'editor-nome6',
+                'editor-link6': 'editor-link6',
+
+                'editor-last7': 'editor-sobrenome7',
+                'editor-first7': 'editor-nome7',
+                'editor-link7': 'editor-link7',
+
+                'editor-last8': 'editor-sobrenome8',
+                'editor-first8': 'editor-nome8',
+                'editor-link8': 'editor-link8',
+
+                'editor-last9': 'editor-sobrenome9',
+                'editor-first9': 'editor-nome9',
+                'editor-link9': 'editor-link9'
+              }
+            },
         { 
             names: ['cite conference', 'cite_conference'], 
             target: 'citar congresso', 
