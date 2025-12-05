@@ -445,8 +445,6 @@ importScript('Usuário(a):Wilfredor/template configs.js');
     function translateCategoriesAndFiles(text) {
         // Categorias
         text = text.replace(/\[\[\s*Category\s*:/gi, '[[Categoria:');
-        // DEFAULTSORT → ORDENAR
-        text = text.replace(/\{\{\s*DEFAULTSORT\s*:/gi, '{{ORDENAR:');
         // Dead link
         text = text.replace(/\{\{\s*Dead link\s*\}\}/gi, '{{Ligação inativa}}');
         // Arquivos
