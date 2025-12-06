@@ -2,11 +2,227 @@
 // Adicione novas entradas aqui com: nomes alternativos, destino e mapa de parâmetros
 // Para campos enumerados, use valueMap: { to: 'destino', valueMap: { 'valor_en': 'valor_pt' } }
    const templateConfigs = [
-	{
+	   	{
+		    names: ['cite news'],
+		    target: 'citar jornal',
+		    dateFields: ['data', 'data-publicacao', 'acessodata', 'arquivodata'],
+		    singleLine: true,
+		    params: {
+		        /* Autores principais */
+		        last: 'ultimo',
+		        first: 'primeiro',
+		        author: 'autor',
+		        'author-link': 'autorlink',
+		        others: 'outros',
+		        'author-mask': 'autor-mascara',
+		        'display-authors': 'numero-autores',
+		        'name-list-style': 'ultimoamp',
+		
+		        /* Autores adicionais (padrão N) */
+		        last2: 'ultimo2',
+		        first2: 'primeiro2',
+		        'author-link2': 'autorlink2',
+		
+		        last3: 'ultimo3',
+		        first3: 'primeiro3',
+		        'author-link3': 'autorlink3',
+		
+		        last4: 'ultimo4',
+		        first4: 'primeiro4',
+		        'author-link4': 'autorlink4',
+		
+		        last5: 'ultimo5',
+		        first5: 'primeiro5',
+		        'author-link5': 'autorlink5',
+		
+		        last6: 'ultimo6',
+		        first6: 'primeiro6',
+		        'author-link6': 'autorlink6',
+		
+		        last7: 'ultimo7',
+		        first7: 'primeiro7',
+		        'author-link7': 'autorlink7',
+		
+		        last8: 'ultimo8',
+		        first8: 'primeiro8',
+		        'author-link8': 'autorlink8',
+		
+		        last9: 'ultimo9',
+		        first9: 'primeiro9',
+		        'author-link9': 'autorlink9',
+		
+		        last10: 'ultimo10',
+		        first10: 'primeiro10',
+		        'author-link10': 'autorlink10',
+		
+		        last11: 'ultimo11',
+		        first11: 'primeiro11',
+		        'author-link11': 'author-link11', /* não há alias direto em pt, mantém-se */
+		
+		        last12: 'ultimo12',
+		        first12: 'primeiro12',
+		        'author-link12': 'author-link12',
+		
+		        last13: 'last13',   /* não há equivalente explícito em pt, mantém-se */
+		        first13: 'first13',
+		        'author-link13': 'author-link13',
+		
+		        last14: 'last14',
+		        first14: 'first14',
+		        'author-link14': 'author-link14',
+		
+		        last15: 'last15',
+		        first15: 'first15',
+		        'author-link15': 'author-link15',
+		
+		        /* Editores (equivalências principais) */
+		        'editor-last': 'editor-sobrenome',
+		        'editor-first': 'editor-nome',
+		        'editor-link': 'editor-link',
+		
+		        'editor-last2': 'editor-sobrenome2',
+		        'editor-first2': 'editor-nome2',
+		        'editor-link2': 'editor-link2',
+		
+		        'editor-last3': 'editor-sobrenome3',
+		        'editor-first3': 'editor-nome3',
+		        'editor-link3': 'editor-link3',
+		
+		        'editor-last4': 'editor-sobrenome4',
+		        'editor-first4': 'editor-nome4',
+		        'editor-link4': 'editor-link4',
+		
+		        'editor-last5': 'editor-sobrenome5',
+		        'editor-first5': 'editor-nome5',
+		        'editor-link5': 'editor-link5',
+		
+		        'editor-last6': 'editor-sobrenome6',
+		        'editor-first6': 'editor-nome6',
+		        'editor-link6': 'editor-link6',
+		
+		        'editor-last7': 'editor-sobrenome7',
+		        'editor-first7': 'editor-nome7',
+		        'editor-link7': 'editor-link7',
+		
+		        'editor-last8': 'editor-sobrenome8',
+		        'editor-first8': 'editor-nome8',
+		        'editor-link8': 'editor-link8',
+		
+		        'editor-last9': 'editor-sobrenome9',
+		        'editor-first9': 'editor-nome9',
+		        'editor-link9': 'editor-link9',
+		
+		        /* Título / obra */
+		        title: 'titulo',
+		        'script-title': 'titulo-translit',
+		        'trans-title': 'titulotrad',
+		        work: 'website',
+		
+		        /* Datas */
+		        date: {
+		            to: 'data',
+		            mask: 'dd de MONTH de YYYY'
+		        },
+		        year: 'ano',
+		        'orig-date': 'anooriginal',
+		        'publication-date': {
+		            to: 'data-publicacao',
+		            mask: 'dd de MONTH de YYYY'
+		        },
+		        'access-date': {
+		            to: 'acessodata',
+		            mask: 'dd de MONTH de YYYY'
+		        },
+		        'archive-date': {
+		            to: 'arquivodata',
+		            mask: 'dd de MONTH de YYYY'
+		        },
+		
+		        /* URL e arquivamento */
+		        url: 'url',
+		        'archive-url': 'arquivourl',
+		        'archive-format': 'arquivoformato',
+		        'url-status': 'urlmorta',
+		        wayback: 'wayb',
+		        'url-access': {
+		            to: 'acessourl',
+		            valueMap: {
+		                registration: 'registo',
+		                subscription: 'subscrição',
+		                limited: 'limitada'
+		            }
+		        },
+		
+		        /* Publicação / local */
+		        publisher: 'publicado',
+		        location: 'local',
+		        place: 'local',
+		        'publication-place': 'local-publicacao',
+		
+		        /* Páginas */
+		        page: 'pagina',
+		        pages: 'paginas',
+		        at: 'em',
+		        'no-pp': 'nopp',
+		
+		        /* Idioma / tipo / formato */
+		        language: 'lingua',
+		        type: 'tipo',
+		        format: 'formato',
+		        edition: 'edicao',
+		
+		        /* Identificadores */
+		        arxiv: 'arxiv',
+		        asin: 'asin',
+		        'asin-tld': 'asin-tld',
+		        bibcode: 'bibcode',
+		        doi: 'doi',
+		        'doi-broken-date': 'doi-broken-date',
+		        isbn: 'isbn',
+		        issn: 'issn',
+		        jfm: 'jfm',
+		        jstor: 'jstor',
+		        lccn: 'lccn',
+		        mr: 'mr',
+		        oclc: 'oclc',
+		        ol: 'ol',
+		        osti: 'osti',
+		        pmc: 'pmc',
+		        pmid: 'pmid',
+		        rfc: 'rfc',
+		        ssrn: 'ssrn',
+		        zbl: 'zbl',
+		        id: 'id',
+		
+		        /* Níveis de acesso de identificadores (nomes já compatíveis) */
+		        'bibcode-access': 'bibcode-access',
+		        'doi-access': 'doi-access',
+		        'hdl-access': 'hdl-access',
+		        'jstor-access': 'jstor-access',
+		        'ol-access': 'ol-access',
+		        'osti-access': 'osti-access',
+		
+		        /* Citação, pontuação e ref */
+		        quote: 'citacao',
+		        ref: 'ref',
+		        separator: 'separador',
+		        postscript: 'pontofinal',
+		
+		        /* Resumo leigo (quando usados nomes em inglês na origem) */
+		        layurl: 'resumo-url',
+		        laysource: 'resumo-fonte',
+		        laydate: 'resumo-data',
+		
+		        /* Diversos */
+		        via: 'via',
+		        agency: 'agency' /* não há campo direto em pt, mantém-se */
+	    }
+	},
+   	{
 		    names: ['Infobox'],
 		    target: 'Infocaixa',
-            preserveOrder: true,
 		    singleLine: false,
+		    preserveOrder: true,
 		    params: {
 		        name: 'nome',
 		        child: 'child',
@@ -21,7 +237,7 @@
 		        abovestyle: 'cabeçalho-estilo',
 		        subheaderstyle: 'subtítulo-estilo',
 		
-		        title: 'cabeçalho',
+		        title: 'título',
 		        above: 'cabeçalho',
 		        subheader: 'subtítulo',
 		
@@ -589,19 +805,19 @@
 		        via: 'via',
 		
 		        /* DATAS */
-		        date: { to: 'data', mask: 'dd de MONTH de YYYY' },
+		        date: { to: 'data', mask: 'YYYY-MM-DD' },
 		        year: 'ano',
 		        'orig-date': 'anooriginal',
 		        'publication-date': 'data-publicacao',
 		
-		        'access-date': { to: 'acessodata', mask: 'dd de MONTH de YYYY' },
-		        accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' },
-
-		        'archive-date': { to: 'arquivodata', mask: 'dd de MONTH de YYYY' },
-		        archivedate: { to: 'arquivodata', mask: 'dd de MONTH de YYYY' },
+		        'access-date': { to: 'acessodata', mask: 'YYYY-MM-DD' },
+		        accessdate: { to: 'acessodata', mask: 'YYYY-MM-DD' },
+		
+		        'archive-date': { to: 'arquivodata', mask: 'YYYY-MM-DD' },
+		        archivedate: { to: 'arquivodata', mask: 'YYYY-MM-DD' },
 		
 		        'doi-broken-date': 'doi-broken-date',
-		        'lay-date': { to: 'resumo-data', mask: 'dd de MONTH de YYYY' },
+		        'lay-date': { to: 'resumo-data', mask: 'YYYY-MM-DD' },
 		
 		        /* LOCAL / PUBLICAÇÃO */
 		        place: 'local',
@@ -935,8 +1151,8 @@
 		        /* Via / provedor */
 		        via: 'via'
 		    }
-        },
-        {
+		},
+         {
               names: ['cite book', 'cite_book'],
               target: 'citar livro',
               dateFields: ['data', 'acessodata', 'data-publicacao', 'arquivodata', 'resumo-data'],
@@ -955,9 +1171,9 @@
                 others: 'outros',
 
                 /* datas principais */
-                date: { to: 'data', mask: 'dd de MONTH de YYYY' },
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' },
                 year: 'ano',
-                'publication-date': { to: 'data-publicacao', mask: 'dd de MONTH de YYYY' },
+                'publication-date': { to: 'data-publicacao', mask: 'DD de MONTH de YYYY' },
                 'publication year': 'ano',
                 'publication-year': 'ano',
                 'orig-year': 'anooriginal',
@@ -1203,7 +1419,7 @@
                 'editor-first9': 'editor-nome9',
                 'editor-link9': 'editor-link9'
               }
-            },
+        },
         { 
             names: ['cite conference', 'cite_conference'], 
             target: 'citar congresso', 
@@ -1213,12 +1429,12 @@
                 title: 'título', 
                 booktitle: 'título-livro', 
                 conference: 'congresso', 
-                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
                 year: 'ano', 
                 publisher: 'editora', 
                 location: 'local', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1233,7 +1449,7 @@
                 subject: 'entrevistado', 
                 title: 'título', 
                 interviewer: 'entrevistador', 
-                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
                 medium: 'meio', 
                 location: 'local', 
                 publisher: 'publicado', 
@@ -1247,12 +1463,12 @@
             singleLine: true,
             params: { 
                 title: 'título', 
-                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
                 degree: 'grau', 
                 department: 'departamento', 
                 university: 'universidade', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1265,12 +1481,12 @@
             singleLine: true,
             params: { 
                 title: 'título', 
-                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
                 type: 'tipo', 
                 publisher: 'publicado', 
                 institution: 'instituição', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1284,12 +1500,12 @@
             params: { 
                 title: 'título', 
                 encyclopedia: 'enciclopédia', 
-                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
                 publisher: 'editora', 
                 location: 'local', 
                 volume: 'volume', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1304,9 +1520,9 @@
                 native_name: 'nome_nativo',
                 native_name_lang: 'nome_nativo_lang',
                 birth_name: 'nome_nascimento',
-                birth_date: { to: 'nascimento_data', mask: 'dd de MONTH de YYYY' },
+                birth_date: { to: 'nascimento_data', mask: 'DD de MONTH de YYYY' },
                 birth_place: 'nascimento_local',
-                death_date: { to: 'morte_data', mask: 'dd de MONTH de YYYY' },
+                death_date: { to: 'morte_data', mask: 'DD de MONTH de YYYY' },
                 death_place: 'morte_local',
                 death_cause: 'causa_morte',
                 resting_place: 'enterro_local',
@@ -1351,12 +1567,12 @@
             birth_name: 'nome_completo',
             birth_date: {
                 to: 'data_nascimento',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             birth_place: 'local_nascimento',
             death_date: {
                 to: 'data_morte',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             death_place: 'local_morte',
             occupation: 'ocupação',
@@ -1376,7 +1592,7 @@
             music: 'música',
             released: {
                 to: 'lançamento',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             runtime: 'duração',
             country: 'país',
@@ -1395,11 +1611,11 @@
             artist: 'artista',
             released: {
                 to: 'lançamento',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             recorded: {
                 to: 'gravação',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             genre: 'gênero',
             label: 'gravadora',
@@ -1422,7 +1638,7 @@
             elevation_m: 'altitude_m',
             established_date: {
                 to: 'data_fundação',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             timezone: 'fuso_horário'
             }
@@ -1437,7 +1653,7 @@
             industry: 'indústria',
             founded: {
                 to: 'fundação',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             headquarters: 'sede',
             area_served: 'serviços',
@@ -1463,7 +1679,7 @@
             num_episodes: 'número_episódios',
             first_aired: {
                 to: 'lançamento',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             network: 'emissora'
             }
@@ -1477,7 +1693,7 @@
             logo: 'logótipo',
             formation: {
                 to: 'fundação',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             type: 'tipo',
             headquarters: 'sede',
@@ -1498,7 +1714,7 @@
             latest_release_version: 'última_versão',
             latest_release_date: {
                 to: 'data_lançamento',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             operating_system: 'sistema_operacional',
             genre: 'gênero',
@@ -1516,7 +1732,7 @@
             full_name: 'nome_completo',
             birth_date: {
                 to: 'data_nascimento',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             birth_place: 'local_nascimento',
             height: 'altura',
@@ -1534,7 +1750,7 @@
             partof: 'parte_de',
             date: {
                 to: 'data',
-                mask: 'dd de MONTH de YYYY'
+                mask: 'DD de MONTH de YYYY'
             },
             place: 'local',
             result: 'resultado',
@@ -1556,7 +1772,7 @@
                 partof: 'subconflitode',
                 image: 'imagem',
                 caption: 'legenda',
-                date: { to: 'período', mask: 'dd de MONTH de YYYY' },
+                date: { to: 'período', mask: 'DD de MONTH de YYYY' },
                 place: 'local',
                 coordinates: 'coordenadas',
                 causes: 'causas',
