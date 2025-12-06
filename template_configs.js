@@ -589,19 +589,19 @@
 		        via: 'via',
 		
 		        /* DATAS */
-		        date: { to: 'data', mask: 'DD de MONTH de YYYY' },
+		        date: { to: 'data', mask: 'dd de MONTH de YYYY' },
 		        year: 'ano',
 		        'orig-date': 'anooriginal',
 		        'publication-date': 'data-publicacao',
 		
-		        'access-date': { to: 'acessodata', mask: 'DD de MONTH de YYYY' },
-		        accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' },
-		
-		        'archive-date': { to: 'arquivodata', mask: 'DD de MONTH de YYYY' },
-		        archivedate: { to: 'arquivodata', mask: 'DD de MONTH de YYYY' },
+		        'access-date': { to: 'acessodata', mask: 'dd de MONTH de YYYY' },
+		        accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' },
+
+		        'archive-date': { to: 'arquivodata', mask: 'dd de MONTH de YYYY' },
+		        archivedate: { to: 'arquivodata', mask: 'dd de MONTH de YYYY' },
 		
 		        'doi-broken-date': 'doi-broken-date',
-		        'lay-date': { to: 'resumo-data', mask: 'DD de MONTH de YYYY' },
+		        'lay-date': { to: 'resumo-data', mask: 'dd de MONTH de YYYY' },
 		
 		        /* LOCAL / PUBLICAÇÃO */
 		        place: 'local',
@@ -955,9 +955,9 @@
                 others: 'outros',
 
                 /* datas principais */
-                date: { to: 'data', mask: 'DD de MONTH de YYYY' },
+                date: { to: 'data', mask: 'dd de MONTH de YYYY' },
                 year: 'ano',
-                'publication-date': { to: 'data-publicacao', mask: 'DD de MONTH de YYYY' },
+                'publication-date': { to: 'data-publicacao', mask: 'dd de MONTH de YYYY' },
                 'publication year': 'ano',
                 'publication-year': 'ano',
                 'orig-year': 'anooriginal',
@@ -1213,12 +1213,12 @@
                 title: 'título', 
                 booktitle: 'título-livro', 
                 conference: 'congresso', 
-                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
                 year: 'ano', 
                 publisher: 'editora', 
                 location: 'local', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1233,7 +1233,7 @@
                 subject: 'entrevistado', 
                 title: 'título', 
                 interviewer: 'entrevistador', 
-                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
                 medium: 'meio', 
                 location: 'local', 
                 publisher: 'publicado', 
@@ -1247,12 +1247,12 @@
             singleLine: true,
             params: { 
                 title: 'título', 
-                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
                 degree: 'grau', 
                 department: 'departamento', 
                 university: 'universidade', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1265,12 +1265,12 @@
             singleLine: true,
             params: { 
                 title: 'título', 
-                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
                 type: 'tipo', 
                 publisher: 'publicado', 
                 institution: 'instituição', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1284,12 +1284,12 @@
             params: { 
                 title: 'título', 
                 encyclopedia: 'enciclopédia', 
-                date: { to: 'data', mask: 'DD de MONTH de YYYY' }, 
+                date: { to: 'data', mask: 'dd de MONTH de YYYY' }, 
                 publisher: 'editora', 
                 location: 'local', 
                 volume: 'volume', 
                 url: 'url', 
-                accessdate: { to: 'acessodata', mask: 'DD de MONTH de YYYY' }, 
+                accessdate: { to: 'acessodata', mask: 'dd de MONTH de YYYY' }, 
                 author: 'autor', 
                 last: 'último', 
                 first: 'primeiro' 
@@ -1304,9 +1304,9 @@
                 native_name: 'nome_nativo',
                 native_name_lang: 'nome_nativo_lang',
                 birth_name: 'nome_nascimento',
-                birth_date: { to: 'nascimento_data', mask: 'DD de MONTH de YYYY' },
+                birth_date: { to: 'nascimento_data', mask: 'dd de MONTH de YYYY' },
                 birth_place: 'nascimento_local',
-                death_date: { to: 'morte_data', mask: 'DD de MONTH de YYYY' },
+                death_date: { to: 'morte_data', mask: 'dd de MONTH de YYYY' },
                 death_place: 'morte_local',
                 death_cause: 'causa_morte',
                 resting_place: 'enterro_local',
@@ -1351,12 +1351,12 @@
             birth_name: 'nome_completo',
             birth_date: {
                 to: 'data_nascimento',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             birth_place: 'local_nascimento',
             death_date: {
                 to: 'data_morte',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             death_place: 'local_morte',
             occupation: 'ocupação',
@@ -1376,7 +1376,7 @@
             music: 'música',
             released: {
                 to: 'lançamento',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             runtime: 'duração',
             country: 'país',
@@ -1395,11 +1395,11 @@
             artist: 'artista',
             released: {
                 to: 'lançamento',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             recorded: {
                 to: 'gravação',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             genre: 'gênero',
             label: 'gravadora',
@@ -1422,7 +1422,7 @@
             elevation_m: 'altitude_m',
             established_date: {
                 to: 'data_fundação',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             timezone: 'fuso_horário'
             }
@@ -1437,7 +1437,7 @@
             industry: 'indústria',
             founded: {
                 to: 'fundação',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             headquarters: 'sede',
             area_served: 'serviços',
@@ -1463,7 +1463,7 @@
             num_episodes: 'número_episódios',
             first_aired: {
                 to: 'lançamento',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             network: 'emissora'
             }
@@ -1477,7 +1477,7 @@
             logo: 'logótipo',
             formation: {
                 to: 'fundação',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             type: 'tipo',
             headquarters: 'sede',
@@ -1498,7 +1498,7 @@
             latest_release_version: 'última_versão',
             latest_release_date: {
                 to: 'data_lançamento',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             operating_system: 'sistema_operacional',
             genre: 'gênero',
@@ -1516,7 +1516,7 @@
             full_name: 'nome_completo',
             birth_date: {
                 to: 'data_nascimento',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             birth_place: 'local_nascimento',
             height: 'altura',
@@ -1534,7 +1534,7 @@
             partof: 'parte_de',
             date: {
                 to: 'data',
-                mask: 'DD de MONTH de YYYY'
+                mask: 'dd de MONTH de YYYY'
             },
             place: 'local',
             result: 'resultado',
@@ -1556,7 +1556,7 @@
                 partof: 'subconflitode',
                 image: 'imagem',
                 caption: 'legenda',
-                date: { to: 'período', mask: 'DD de MONTH de YYYY' },
+                date: { to: 'período', mask: 'dd de MONTH de YYYY' },
                 place: 'local',
                 coordinates: 'coordenadas',
                 causes: 'causas',

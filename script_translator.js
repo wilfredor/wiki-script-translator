@@ -22,9 +22,11 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         const monthKeys = Object.keys(monthMap).sort((a, b) => b.length - a.length).join('|');
         const monthWordRe = new RegExp(`(^|[^\\p{L}])(${monthKeys})(?=$|[^\\p{L}])`, 'iu');
         const iso = /^(\d{4})[-\/\.](\d{1,2})[-\/\.](\d{1,2})$/;
-        const dmy = /^(\d{1,2})\s+([A-Za-z\.]+)\s+(\d{4})$/;
-        const mdy = /^([A-Za-z\.]+)\s+(\d{1,2}),?\s+(\d{4})$/;
-        const my = /^([A-Za-z\.]+)\s+(\d{4})$/;
+        const dmy = /^(\d{1,2})\s+([\p{L}\.]+)\s+(\d{4})$/u;
+        const mdy = /^([\p{L}\.]+)\s+(\d{1,2}),?\s+(\d{4})$/u;
+        const my = /^([\p{L}\.]+)\s+(\d{4})$/u;
+        const dmyPt = /^(\d{1,2})\s+de\s+([\p{L}\.]+)\s+de\s+(\d{4})$/iu;
+        const hasDigits = /\d/.test(val);
 
         function mmFromMonth(m) {
             const key = m.replace(/\./g, '').toLowerCase();
@@ -52,7 +54,12 @@ importScript('Usuário(a):Wilfredor/template configs.js');
             const mm = mmFromMonth(m[1]);
             return { dd: '', mm: mm || '', yyyy: m[2] };
         }
-        if (monthWordRe.test(val)) {
+        if ((m = val.match(dmyPt))) {
+            const mm = mmFromMonth(m[2]);
+            if (!mm) return null;
+            return { dd: ('0' + m[1]).slice(-2), mm, yyyy: m[3] };
+        }
+        if (!hasDigits && monthWordRe.test(val)) {
             // fallback: try to replace month word and keep the rest
             const mmWord = val.match(monthWordRe)[2];
             const mm = mmFromMonth(mmWord);
@@ -63,14 +70,20 @@ importScript('Usuário(a):Wilfredor/template configs.js');
 
     function applyDateMask(parts, mask) {
         if (!parts || !mask) return null;
-        const monthName = parts.mm ? monthsPt[parseInt(parts.mm, 10) - 1] || '' : '';
+        const dayNum = parts.dd ? parseInt(parts.dd, 10) : null;
+        const monthNum = parts.mm ? parseInt(parts.mm, 10) : null;
+        const dayNoPad = Number.isFinite(dayNum) ? String(dayNum) : '';
+        const monthNoPad = Number.isFinite(monthNum) ? String(monthNum) : '';
+        const monthName = monthNum ? monthsPt[monthNum - 1] || '' : '';
         const tokens = {
             YYYY: parts.yyyy || '',
             MM: parts.mm || '',
             DD: parts.dd || '',
-            MONTH: monthName
+            MONTH: monthName,
+            dd: dayNoPad,
+            mm: monthNoPad
         };
-        return mask.replace(/YYYY|MM|DD|MONTH/g, (t) => tokens[t] || '');
+        return mask.replace(/YYYY|MONTH|MM|DD|mm|dd/g, (t) => tokens[t] || '');
     }
 
     function mapEnumValue(valueMap, rawValue) {
@@ -232,18 +245,6 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         return matches;
     }
 
-    const dateParamsPt = new Set([
-        'data',
-        'acessodata',
-        'acessadoem',
-        'arquivodata',
-        'date',
-        'ano',
-        'mês',
-        'dia',
-        'birth_date',
-        'death_date'
-    ]);
     const DEFAULT_DATE_MASK = 'YYYY-MM-DD';
 
     function translateTemplateContent(cfg, content, originalName) {
@@ -260,7 +261,17 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         const mapped = [];
         const others = [];
         const orderedParts = [];
-        const dateSet = new Set([...(cfg.dateFields || []), ...dateParamsPt]);
+        const dateSet = new Set(cfg.dateFields || []);
+        const paramMaskMap = new Map();
+        if (cfg.params) {
+            Object.entries(cfg.params).forEach(([key, cfgVal]) => {
+                if (cfgVal && typeof cfgVal === 'object' && cfgVal.mask) {
+                    const target = cfgVal.to || key;
+                    paramMaskMap.set(target, cfgVal.mask);
+                    dateSet.add(target);
+                }
+            });
+        }
         const positionalCfg = Array.isArray(cfg.positional) ? cfg.positional : [];
         let positionalIndex = 0;
 
@@ -300,21 +311,23 @@ importScript('Usuário(a):Wilfredor/template configs.js');
             const isObjectCfg = paramCfg && typeof paramCfg === 'object';
             const mappedName = isObjectCfg ? (paramCfg.to || mappedKey) : (paramCfg || mappedKey);
             const isDateField = dateSet.has(mappedName) || (isObjectCfg && paramCfg.mask);
+            const isLikelyUrl = /:\/\/\S+/.test(cleanValue) || /^www\./i.test(cleanValue);
+            const hasDigits = /\d/.test(cleanValue);
             const hasLetters = /[A-Za-z]/.test(cleanValue);
             let mappedValue = value;
-            const mask = isObjectCfg && paramCfg.mask ? paramCfg.mask : (isDateField ? DEFAULT_DATE_MASK : null);
-            if (mask && hasLetters) {
-                const dateParts = parseDateParts(cleanValue);
-                const hasDayYear = dateParts && dateParts.dd && dateParts.yyyy;
-                const masked = hasDayYear ? applyDateMask(dateParts, mask) : null;
-                if (masked) {
-                    mappedValue = preserveWhitespace(value, masked);
-                } else if (isDateField && hasLetters) {
-                    const normalized = normalizeDate(cleanValue);
-                    mappedValue = normalized ? preserveWhitespace(value, normalized) : value;
-                }
-            } else if (isDateField) {
-                if (hasLetters) {
+            const maskFromCfg = paramMaskMap.get(mappedName) || (isObjectCfg && paramCfg.mask ? paramCfg.mask : null);
+            const mask = maskFromCfg || (isDateField ? DEFAULT_DATE_MASK : null);
+            if (isDateField && !isLikelyUrl) {
+                if (mask && (hasLetters || hasDigits)) {
+                    const dateParts = parseDateParts(cleanValue);
+                    const masked = dateParts ? applyDateMask(dateParts, mask) : null;
+                    if (masked) {
+                        mappedValue = preserveWhitespace(value, masked);
+                    } else {
+                        const normalized = normalizeDate(cleanValue);
+                        mappedValue = normalized ? preserveWhitespace(value, normalized) : value;
+                    }
+                } else if (hasLetters) {
                     const normalized = normalizeDate(cleanValue);
                     mappedValue = normalized ? preserveWhitespace(value, normalized) : value;
                 }
@@ -418,12 +431,28 @@ importScript('Usuário(a):Wilfredor/template configs.js');
         september: 'setembro', sep: 'setembro', sept: 'setembro',
         october: 'outubro', oct: 'outubro',
         november: 'novembro', nov: 'novembro',
-        december: 'dezembro', dec: 'dezembro'
+        december: 'dezembro', dec: 'dezembro',
+        // português
+        janeiro: 'janeiro',
+        fevereiro: 'fevereiro', fev: 'fevereiro',
+        'março': 'março', marco: 'março',
+        abril: 'abril', abr: 'abril',
+        maio: 'maio',
+        junho: 'junho',
+        julho: 'julho',
+        agosto: 'agosto', ago: 'agosto',
+        setembro: 'setembro', set: 'setembro',
+        outubro: 'outubro', out: 'outubro',
+        novembro: 'novembro',
+        dezembro: 'dezembro', dez: 'dezembro'
     };
 
     function normalizeDate(raw) {
         const val = (raw || '').trim();
         if (!val) return val;
+        // não tente converter datas dentro de URLs ou cadeias sem dígitos
+        if (/^[a-z][a-z0-9+.-]*:\/\/\S+/i.test(val)) return val;
+        const hasDigits = /\d/.test(val);
 
         const monthRegex = Object.keys(monthMap).sort((a, b) => b.length - a.length).join('|');
         const month = new RegExp(`(^|[^\\p{L}])(${monthRegex})(?=$|[^\\p{L}])`, 'iu');
@@ -470,7 +499,7 @@ importScript('Usuário(a):Wilfredor/template configs.js');
             const monthName = monthsPt[mm - 1] || mm;
             return `${monthName} de ${m[2]}`;
         }
-        if (month.test(val)) {
+        if (hasDigits && month.test(val)) {
             return val.replace(month, (full, prefix, mt) => {
                 const mm = monthToNum(mt);
                 const monthName = mm ? monthsPt[mm - 1] : null;
@@ -478,24 +507,6 @@ importScript('Usuário(a):Wilfredor/template configs.js');
             });
         }
         return val;
-    }
-
-    function translateDates(text) {
-        const dateParams = ['data', 'acessodata', 'acessadoem', 'arquivodata', 'archive-date', 'access-date', 'date'];
-        let changed = false;
-        dateParams.forEach((p) => {
-            const re = new RegExp('(\\|\\s*' + p + '\\s*=)([^|}\n]*)', 'ig');
-            const next = text.replace(re, function (_, k, v) {
-                const hasLetters = /[A-Za-z]/.test(v);
-                if (!hasLetters) return k + v;
-                const novo = normalizeDate(v);
-                const res = k + (novo || v);
-                if (res !== k + v) changed = true;
-                return res;
-            });
-            text = next;
-        });
-        return { text, changed };
     }
 
     function alignInfoTemplates(text) {
@@ -622,9 +633,6 @@ importScript('Usuário(a):Wilfredor/template configs.js');
             safeGuard += 1;
             if (result.changed) summaryNotes.add('templates');
         }
-        const dateResult = translateDates(text);
-        text = dateResult.text;
-        if (dateResult.changed) summaryNotes.add('datas');
 
         const catFileResult = translateCategoriesAndFiles(text);
         if (catFileResult !== text) summaryNotes.add('categorias/imagens');
